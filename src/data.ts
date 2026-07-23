@@ -62,7 +62,7 @@ export const projects: Project[] = [
     tags: ["Full-stack", "Product design"],
     description:
       "Architected a full-stack e-commerce platform plus an internal business management system — inventory, finance, and analytics dashboards — processing ~200 orders a month.",
-    link: "https://simpulanjiwa-ecommerce.onrender.com/",
+    link: "https://simpulanjiwa.com",
     linkLabel: "Visit live",
     fallbackLabel: "SJ",
   },
