@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  --color-cream: #F3EEE8;
+  --color-blue-light: #C7D6E8;
+  --color-blue: #B9C7D9;
+  --color-maroon-deep: #550F15;
+  --color-maroon: #882324;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-cream);
+  color: var(--color-maroon-deep);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-maroon);
+  color: var(--color-cream);
+}
+
+/* Dot-grid poster texture */
+.dot-grid {
+  background-image: radial-gradient(currentColor 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: rgba(85, 15, 21, 0.16);
+}
+
+.dot-grid-dark {
+  background-image: radial-gradient(currentColor 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: rgba(243, 238, 232, 0.1);
+}
+
+/* Framed poster container */
+.framed {
+  border-left: 1px solid rgba(85, 15, 21, 0.15);
+  border-right: 1px solid rgba(85, 15, 21, 0.15);
+}
+
+/* Scroll-reveal words */
+.reveal-word {
+  color: rgba(243, 238, 232, 0.25);
+  transition: color 0.4s ease;
+}
+.reveal-word.revealed {
+  color: var(--color-cream);
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 28s linear infinite;
+}
+
+/* Scroll-reveal + entrance animations */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Image reveal: gentle scale + clip wipe */
+  .reveal-img img {
+    transform: scale(1.08);
+    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal-in.reveal-img img,
+  .reveal-in .reveal-img img {
+    transform: scale(1);
+  }
+
+  /* On-load entrance */
+  .rise {
+    opacity: 0;
+    animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* Jagged edge divider */
+.jagged-bottom {
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% 92%,
+    97% 100%, 94% 90%, 91% 100%, 88% 92%, 85% 100%, 82% 91%, 79% 100%,
+    76% 92%, 73% 100%, 70% 91%, 67% 100%, 64% 92%, 61% 100%, 58% 91%,
+    55% 100%, 52% 92%, 49% 100%, 46% 91%, 43% 100%, 40% 92%, 37% 100%,
+    34% 91%, 31% 100%, 28% 92%, 25% 100%, 22% 91%, 19% 100%, 16% 92%,
+    13% 100%, 10% 91%, 7% 100%, 4% 92%, 0% 100%
+  );
+}
