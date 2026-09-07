@@ -1,46 +1,55 @@
+import { useEffect, useRef, useState } from "react";
 import { profile } from "../data";
+import NowPlaying from "./NowPlaying";
+import { shouldPlayIntro } from "../intro";
+
+// Drop your hero photo here (or change this path to match your filename).
+const HERO_IMAGE = "/images/hero.jpeg";
+
+type Phase = "full" | "center" | "final";
 
 export default function Hero() {
+  // Sequence: full-screen photo → shrink to centred name → slide left + labels fly in.
+  const playRef = useRef(shouldPlayIntro());
+  const [phase, setPhase] = useState<Phase>(playRef.current ? "full" : "final");
+
+  useEffect(() => {
+    if (!playRef.current) return;
+    try {
+      sessionStorage.setItem("heroIntroPlayed", "1");
+    } catch {
+      /* sessionStorage may be unavailable; the intro still plays this once */
+    }
+    // Hold the full-screen photo, shrink it to the centred name, then slide left + fly in.
+    const toCenter = setTimeout(() => setPhase("center"), 700);
+    const toFinal = setTimeout(() => setPhase("final"), 2000);
+    return () => {
+      clearTimeout(toCenter);
+      clearTimeout(toFinal);
+    };
+  }, []);
+
+  const nameClass =
+    "hero-name font-display font-bold text-maroon-deep leading-none whitespace-nowrap tracking-[-0.04em] text-[19vw] sm:text-[14vw] md:text-[10.5vw]";
+
   return (
-    <section id="top" className="dot-grid relative pt-10">
-      <div className="framed max-w-[1400px] mx-auto px-6 md:px-10">
-        <div className="pt-16 pb-10 flex justify-center rise" style={{ animationDelay: "0ms" }}>
-          <svg width="130" height="46" viewBox="0 0 130 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M4 34C20 10 34 4 48 18C60 30 70 6 84 14C96 20.5 104 8 126 12"
-              stroke="var(--color-maroon)"
-              strokeWidth="3"
-              strokeLinecap="round"
-            />
-          </svg>
-        </div>
+    <section
+      id="top"
+      data-phase={phase}
+      className="hero dot-grid relative overflow-hidden min-h-[100svh]"
+    >
+      <h1 className="hero-wordmark">
+        <span className={nameClass}>Khairina</span>
+        <span className="hero-photo bg-blue-light/40 shadow-xl" aria-hidden>
+          <img src={HERO_IMAGE} alt="" />
+        </span>
+        <span className={nameClass}>Hizar</span>
+        <span className="hero-ui hero-role font-semibold uppercase tracking-widest text-maroon-deep/70 text-[10px] sm:text-xs md:text-sm">
+          {profile.role}
+        </span>
+      </h1>
 
-        <div className="relative border-t border-b border-maroon-deep/15 py-6 md:py-10 rise" style={{ animationDelay: "120ms" }}>
-          <div className="flex items-center justify-between mb-4 md:absolute md:inset-0 md:mb-0 md:pointer-events-none">
-            <span className="text-xs sm:text-sm font-semibold uppercase tracking-widest text-maroon-deep/70">
-              {profile.role}
-            </span>
-            <span className="text-xs sm:text-sm font-semibold uppercase tracking-widest text-maroon-deep/70 text-right">
-              {profile.location}
-            </span>
-          </div>
-
-          <h1 className="font-display font-bold uppercase text-maroon-deep leading-[0.92] text-center text-[15vw] sm:text-[10vw] md:text-[6.6vw]">
-            Khairina
-            <br />
-            Atiqah
-          </h1>
-        </div>
-
-        <div className="flex justify-center py-10 md:py-14 rise" style={{ animationDelay: "260ms" }}>
-          <a
-            href="#work"
-            className="px-7 py-4 rounded-full bg-blue-light text-maroon-deep font-semibold hover:bg-blue transition-colors"
-          >
-            {profile.tagline}!
-          </a>
-        </div>
-      </div>
+      <NowPlaying autostart={phase === "final"} />
     </section>
   );
 }

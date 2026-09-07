@@ -1,18 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Libre Franklin", system-ui, sans-serif;
+  --font-sans: "Libre Franklin", system-ui, sans-serif;
 
-  --color-cream: #F3EEE8;
-  --color-blue-light: #C7D6E8;
-  --color-blue: #B9C7D9;
-  --color-maroon-deep: #550F15;
+  --color-cream: #f3eee8;
+  --color-blue-light: #c7d6e8;
+  --color-blue: #b9c7d9;
+  --color-maroon-deep: #550f15;
   --color-maroon: #882324;
 }
 
 html {
   scroll-behavior: smooth;
+  /* Snap firmly to each section. */
+  scroll-snap-type: y mandatory;
+}
+
+/* Each top-level section is a snap point. min-height lets tall sections still
+   scroll normally inside before snapping to the next. */
+main > section,
+#contact {
+  scroll-snap-align: start;
 }
 
 body {
@@ -47,6 +56,148 @@ body {
   border-right: 1px solid rgba(85, 15, 21, 0.15);
 }
 
+/* Hero intro — staged: full-screen photo → shrink to centred name → slide left → labels fly in */
+.hero {
+  --photo-w: clamp(90px, 13vw, 240px);
+  --photo-h: clamp(52px, 7vw, 104px);
+  --ease: cubic-bezier(0.72, 0, 0.14, 1);
+}
+
+/* Wordmark rests centred; during the shrink it sits offset-right, then glides to centre. */
+.hero-wordmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* resting: centred */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0; /* letters flush against the image */
+  flex-wrap: nowrap;
+  margin: 0;
+  z-index: 2;
+  transition: transform 0.8s var(--ease);
+}
+/* During the shrink phase: offset to the right, before it glides back to centre */
+.hero[data-phase="center"] .hero-wordmark {
+  transform: translate(calc(-50% + 15vw), -50%);
+}
+
+.hero-photo {
+  flex: none;
+  overflow: hidden;
+  width: var(--photo-w);
+  height: var(--photo-h);
+  margin-inline: clamp(2px, 0.4vw, 8px); /* tiny gap between the words and the photo */
+  transition: width 1.1s var(--ease), height 1.1s var(--ease),
+    border-radius 1.1s ease;
+}
+.hero-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+/* Phase 1: photo fills the entire screen. Collapse the names so nothing offsets it. */
+.hero[data-phase="full"] .hero-photo {
+  width: 100vw;
+  height: 100svh;
+  border-radius: 0;
+  margin-inline: 0;
+}
+.hero[data-phase="full"] .hero-name {
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Role label sits at the bottom-right of the wordmark, flies in on the final phase */
+.hero-ui {
+  transition: opacity 0.6s ease, transform 0.6s var(--ease);
+}
+.hero-role {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: clamp(-6px, -0.2vw, 0px);
+  transition-delay: 0.2s;
+}
+/* Hidden during the photo + shrink phases */
+.hero[data-phase="full"] .hero-ui,
+.hero[data-phase="center"] .hero-ui {
+  opacity: 0;
+  transition: none;
+}
+.hero[data-phase="full"] .hero-role,
+.hero[data-phase="center"] .hero-role {
+  transform: translateY(45%);
+}
+
+@media (max-width: 640px) {
+  .hero {
+    --photo-w: clamp(180px, 62vw, 340px);
+    --photo-h: clamp(130px, 44vw, 260px);
+  }
+  .hero-wordmark {
+    flex-direction: column;
+  }
+  /* No right offset on mobile — stay centred throughout */
+  .hero[data-phase="center"] .hero-wordmark {
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-photo,
+  .hero-wordmark,
+  .hero-ui {
+    transition: none;
+  }
+}
+
+/* Now-playing equalizer bars */
+.eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: 18px;
+  height: 15px;
+  color: var(--color-maroon);
+}
+.eq > span {
+  flex: 1;
+  height: 25%;
+  background: currentColor;
+  border-radius: 1px;
+}
+.eq.playing > span {
+  animation: eq 0.9s ease-in-out infinite;
+}
+.eq.playing > span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.eq.playing > span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.eq.playing > span:nth-child(4) {
+  animation-delay: 0.45s;
+}
+@keyframes eq {
+  0%,
+  100% {
+    height: 25%;
+  }
+  50% {
+    height: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .eq.playing > span {
+    animation: none;
+  }
+}
+
 /* Scroll-reveal words */
 .reveal-word {
   color: rgba(243, 238, 232, 0.25);
@@ -58,8 +209,12 @@ body {
 
 /* Marquee */
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 .marquee-track {
   animation: marquee 28s linear infinite;
@@ -70,8 +225,7 @@ body {
   .reveal {
     opacity: 0;
     transform: translateY(28px);
-    transition:
-      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
       transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: opacity, transform;
   }
@@ -110,11 +264,41 @@ body {
 /* Jagged edge divider */
 .jagged-bottom {
   clip-path: polygon(
-    0% 0%, 100% 0%, 100% 92%,
-    97% 100%, 94% 90%, 91% 100%, 88% 92%, 85% 100%, 82% 91%, 79% 100%,
-    76% 92%, 73% 100%, 70% 91%, 67% 100%, 64% 92%, 61% 100%, 58% 91%,
-    55% 100%, 52% 92%, 49% 100%, 46% 91%, 43% 100%, 40% 92%, 37% 100%,
-    34% 91%, 31% 100%, 28% 92%, 25% 100%, 22% 91%, 19% 100%, 16% 92%,
-    13% 100%, 10% 91%, 7% 100%, 4% 92%, 0% 100%
+    0% 0%,
+    100% 0%,
+    100% 92%,
+    97% 100%,
+    94% 90%,
+    91% 100%,
+    88% 92%,
+    85% 100%,
+    82% 91%,
+    79% 100%,
+    76% 92%,
+    73% 100%,
+    70% 91%,
+    67% 100%,
+    64% 92%,
+    61% 100%,
+    58% 91%,
+    55% 100%,
+    52% 92%,
+    49% 100%,
+    46% 91%,
+    43% 100%,
+    40% 92%,
+    37% 100%,
+    34% 91%,
+    31% 100%,
+    28% 92%,
+    25% 100%,
+    22% 91%,
+    19% 100%,
+    16% 92%,
+    13% 100%,
+    10% 91%,
+    7% 100%,
+    4% 92%,
+    0% 100%
   );
 }

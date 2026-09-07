@@ -3,11 +3,10 @@ export const profile = {
   fullName: "Khairina Atiqah Binti Khairil Hizar",
   role: "Software Engineer",
   location: "Based in Cyberjaya, Malaysia",
-  tagline: "Curious? Have a look",
   email: "khairinahizar@gmail.com",
   phone: "+60 13-489 1450",
-  linkedin: "https://www.linkedin.com/in/khairina-atiqah-khairil-hizar-17a7811a5/",
-  bio: "I'm a jack of all trades in digital. Put me in a product role and I'll find the strategy; put me in a tech-heavy role and I'll ship the code. When a project calls for a stack I don't know yet, I teach myself and adapt fast — I picked up 3D and WebGL frameworks on my own for a medical visualization tool. What I care about most is finding the human need underneath a request, so the tech I build solves the right problem.",
+  linkedin:
+    "https://www.linkedin.com/in/khairina-atiqah-khairil-hizar-17a7811a5/",
 };
 
 export const stats = [
@@ -35,15 +34,6 @@ export const showcaseCategories = [
   },
 ];
 
-export const skills = [
-  "JavaScript", "TypeScript", "Java", "Python",
-  "React", "Angular", "Next.js", "Three.js",
-  "Express.js", "Node.js", "Spring Boot", "Django",
-  "AWS", "Docker", "Kubernetes", "Ansible",
-  "SQL", "NoSQL", "Redis", "PostgreSQL", "DynamoDB",
-  "Agile", "Project Management",
-];
-
 export type Project = {
   year: string;
   title: string;
@@ -51,77 +41,33 @@ export type Project = {
   description: string;
   link?: string;
   linkLabel?: string;
-  image?: "strapseeker" | "craniomax" | "scholarspace";
+  /** Image URL, e.g. "/images/masjidkita.jpeg" for a file in public/images. */
+  image?: string;
   fallbackLabel?: string;
 };
 
 export const projects: Project[] = [
   {
-    year: "2024–2026",
-    title: "Simpulan Jiwa E-Commerce & Internal System",
+    year: "2026",
+    title: "Masjid Kita",
+    tags: ["Full-stack", "AI Engineer"],
+    description:
+      "Digital platform that connects donors with mosques and suraus in need of public funds for construction, renovation, maintenance, and community welfare.",
+    link: "https://masjidkita.my",
+    linkLabel: "Visit live",
+    image: "/images/masjidkita.jpeg",
+    fallbackLabel: "MK",
+  },
+  {
+    year: "2026",
+    title: "Simpulan Jiwa",
     tags: ["Full-stack", "Product design"],
     description:
       "Architected a full-stack e-commerce platform plus an internal business management system — inventory, finance, and analytics dashboards — processing ~200 orders a month.",
     link: "https://simpulanjiwa.com",
     linkLabel: "Visit live",
+    image: "/images/simpulanjiwa.jpeg",
     fallbackLabel: "SJ",
-  },
-  {
-    year: "2024",
-    title: "Strapseeker Inventory System",
-    tags: ["Full-stack", "Systems"],
-    description:
-      "Real-time inventory tracking with RFID integration and an automated workflow engine built to handle high-volume e-commerce order processing.",
-    link: "https://www.strapseeker.com/",
-    linkLabel: "Visit live",
-    image: "strapseeker",
-  },
-  {
-    year: "2024",
-    title: "Cranial Growth Calculator — CranioMax",
-    tags: ["3D / WebGL", "Visualization"],
-    description:
-      "Self-taught Three.js to build a dynamic skull visualization engine with advanced 3D mathematical modeling and real-time parameter adjustment.",
-    link: "https://www.craniomax.com/",
-    linkLabel: "Visit live",
-    image: "craniomax",
-  },
-  {
-    year: "2024",
-    title: "Kira-Kira AI — Financial Advisor",
-    tags: ["Mobile", "GenAI / RAG"],
-    description:
-      "Cross-platform AI financial advisor supporting Malay, Mandarin, and Tamil. Led the RAG architecture on AWS Bedrock — built in 48 hours, placing 7th of 100+ teams at PayHack 2024.",
-    linkLabel: "Case study on request",
-    fallbackLabel: "KK",
-  },
-  {
-    year: "2024",
-    title: "ScholarSpace — Research Platform",
-    tags: ["Full-stack", "Product"],
-    description:
-      "Led development of a full-stack research collaboration platform enabling academic discovery and partnership formation, built from scratch with Next.js and tRPC.",
-    link: "https://scholarspace-kyuuurina.vercel.app/",
-    linkLabel: "Visit live",
-    image: "scholarspace",
-  },
-  {
-    year: "2024",
-    title: "Degree Mate — Career Intelligence",
-    tags: ["Product", "GenAI"],
-    description:
-      "Built a job pathway recommendation engine with GenAI integration to analyze Malaysian job market trends and map academic pathways at Universiti Malaya.",
-    linkLabel: "Case study on request",
-    fallbackLabel: "DM",
-  },
-  {
-    year: "2024",
-    title: "PDISK — Interactive Coding Game",
-    tags: ["3D / WebGL", "EdTech"],
-    description:
-      "Interactive web game built with Three.js to teach coding concepts to primary school students, developed under Malaysia's Ministry of Education.",
-    linkLabel: "Case study on request",
-    fallbackLabel: "PD",
   },
 ];
 
@@ -220,25 +166,29 @@ export const articles: Article[] = [
       "Twelve hours before Bootcamp 4's presentation deadline, my team still didn't have a solution. I stepped into the leadership role we needed right then, and we pulled it together in time. That's what earned me the programme's Top Performer Award.",
       "What stayed with me was the people. Across six bootcamps, I met professionals from completely different industries and backgrounds who were just as serious about building themselves as I was.",
     ],
-    images: ["/images/axiata-1.jpeg", "/images/axiata-2.jpeg", "/images/axiata-3.jpeg"],
-    fallbackLabel: "★",
-  },
-  {
-    slug: "payhack-2024",
-    date: "PayNet Open Finance Hackathon",
-    category: "Award",
-    title: "7th Place, PayHack 2024",
-    excerpt:
-      "Named a Top 10 Finalist at the JomHack × PayNet Open Finance Hackathon for Kira Kira, a Malaysian AI personal financial advisor built with my team over a 24-hour weekend.",
-    body: [
-      "The Open Finance Hackathon, organised by JomHack and PayNet (Payments Network Malaysia) and hosted at the Asia School of Business, was my first 24-hour in-person hackathon. Over a single intensive weekend, our team set out to build a working product from the ground up.",
-      "Competing as Kira Kira Kampung, we were named one of the Top 10 Finalists for Kira Kira — a Malaysian AI personal financial advisor designed to help users navigate the local financial landscape and match each customer with the products best suited to their needs.",
-      "To make the assistant genuinely accessible to Malaysian users, we built a voice interface using Mesolitica's APIs for local-language speech-to-text, allowing people to interact with the advisor in the languages they actually speak.",
-      "On the engineering side, I developed the personalised advisory feature using a retrieval-augmented generation (RAG) pipeline on AWS Bedrock. It was my first time working with AWS's generative AI stack, and delivering a working RAG system within the hackathon's tight timeline proved to be a demanding but rewarding technical challenge.",
+    images: [
+      "/images/axiata-1.jpeg",
+      "/images/axiata-2.jpeg",
+      "/images/axiata-3.jpeg",
     ],
-    images: ["/images/payhack-1.jpeg", "/images/payhack-2.jpeg"],
     fallbackLabel: "★",
   },
+  // {
+  //   slug: "payhack-2024",
+  //   date: "PayNet Open Finance Hackathon",
+  //   category: "Award",
+  //   title: "7th Place, PayHack 2024",
+  //   excerpt:
+  //     "Named a Top 10 Finalist at the JomHack × PayNet Open Finance Hackathon for Kira Kira, a Malaysian AI personal financial advisor built with my team over a 24-hour weekend.",
+  //   body: [
+  //     "The Open Finance Hackathon, organised by JomHack and PayNet (Payments Network Malaysia) and hosted at the Asia School of Business, was my first 24-hour in-person hackathon. Over a single intensive weekend, our team set out to build a working product from the ground up.",
+  //     "Competing as Kira Kira Kampung, we were named one of the Top 10 Finalists for Kira Kira — a Malaysian AI personal financial advisor designed to help users navigate the local financial landscape and match each customer with the products best suited to their needs.",
+  //     "To make the assistant genuinely accessible to Malaysian users, we built a voice interface using Mesolitica's APIs for local-language speech-to-text, allowing people to interact with the advisor in the languages they actually speak.",
+  //     "On the engineering side, I developed the personalised advisory feature using a retrieval-augmented generation (RAG) pipeline on AWS Bedrock. It was my first time working with AWS's generative AI stack, and delivering a working RAG system within the hackathon's tight timeline proved to be a demanding but rewarding technical challenge.",
+  //   ],
+  //   images: ["/images/payhack-1.jpeg", "/images/payhack-2.jpeg"],
+  //   fallbackLabel: "★",
+  // },
 ];
 
 /** Look up an article by its slug (or its slugified title). */

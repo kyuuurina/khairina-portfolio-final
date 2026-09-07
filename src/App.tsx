@@ -1,14 +1,10 @@
 import { useEffect } from "react";
-import FloatingNav from "./components/FloatingNav";
+import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import QuoteBlock from "./components/QuoteBlock";
-import Statement from "./components/Statement";
-import Showcase from "./components/Showcase";
 import Projects from "./components/Projects";
-import SkillsMarquee from "./components/SkillsMarquee";
-import Experience from "./components/Experience";
+// import Experience from "./components/Experience";
 import Journal from "./components/Journal";
-import Contact from "./components/Contact";
+// import Contact from "./components/Contact";
 import ArticlePage from "./components/ArticlePage";
 import { usePath } from "./router";
 
@@ -22,18 +18,14 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-cream">
-      <FloatingNav />
+      <Navbar />
       <main>
         <Hero />
-        <QuoteBlock />
-        <Statement />
-        <Showcase />
         <Projects />
-        <SkillsMarquee />
-        <Experience />
+        {/* <Experience /> */}
         <Journal />
       </main>
-      <Contact />
+      {/* <Contact /> */}
     </div>
   );
 }

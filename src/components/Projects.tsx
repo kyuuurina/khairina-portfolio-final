@@ -1,14 +1,5 @@
-import strapseekerImg from "../assets/projects/strapseeker.jpg";
-import craniomaxImg from "../assets/projects/craniomax.jpg";
-import scholarspaceImg from "../assets/projects/scholarspace.jpg";
 import { projects } from "../data";
 import Reveal from "./Reveal";
-
-const images: Record<string, string> = {
-  strapseeker: strapseekerImg,
-  craniomax: craniomaxImg,
-  scholarspace: scholarspaceImg,
-};
 
 export default function Projects() {
   return (
@@ -27,12 +18,13 @@ export default function Projects() {
           {projects.map((p, idx) => {
             const Card = (
               <div className="group h-full border-r border-b border-maroon-deep/15 p-2">
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-blue-light/40 reveal-img">
+                {/* Laptop (16:9) frame — object-contain so website screenshots never get cropped */}
+                <div className="relative aspect-video rounded-2xl overflow-hidden bg-blue-light/30 reveal-img">
                   {p.image ? (
                     <img
-                      src={images[p.image]}
+                      src={p.image}
                       alt={p.title}
-                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
@@ -53,7 +45,8 @@ export default function Projects() {
                         key={t}
                         className="text-[11px] font-semibold uppercase tracking-wide text-maroon"
                       >
-                        {t}{p.tags.indexOf(t) < p.tags.length - 1 ? " ·" : ""}
+                        {t}
+                        {p.tags.indexOf(t) < p.tags.length - 1 ? " ·" : ""}
                       </span>
                     ))}
                   </div>
