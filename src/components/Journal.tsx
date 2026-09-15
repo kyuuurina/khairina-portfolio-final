@@ -19,7 +19,7 @@ export default function Journal() {
           {articles.map((a, idx) => {
             const Card = (
               <div className="group h-full flex flex-col">
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-blue-light/40 reveal-img">
+                <div className="relative aspect-[4/3] overflow-hidden bg-blue-light/40 reveal-img">
                   {a.images?.[0] ? (
                     <img
                       src={a.images[0]}

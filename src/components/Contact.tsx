@@ -2,54 +2,27 @@ import { profile } from "../data";
 import Reveal from "./Reveal";
 
 export default function Contact() {
+  const enquiry = `mailto:${profile.email}?subject=${encodeURIComponent("Let's work on a project")}&body=${encodeURIComponent("Hi Khairina,\n\nI'd love to discuss a project with you.\n\nThe idea:\n\nIdeal timeline:\n\nBudget range (if known):\n\nBest way to reach me:\n")}`;
+
   return (
-    <footer id="contact" className="dot-grid-dark relative bg-blue-light pt-16 md:pt-20 overflow-hidden">
-      <div className="framed max-w-[1400px] mx-auto px-6 md:px-10">
-        <Reveal className="relative text-center select-none pointer-events-none mb-6">
-          <h2 className="font-display font-bold uppercase text-maroon-deep/15 leading-[0.85] text-[15vw] sm:text-[10vw] md:text-[7vw]">
-            Khairina
-            <br />
-            Atiqah
-          </h2>
+    <footer id="contact" className="contact-editorial">
+      <div className="contact-editorial__inner">
+        <Reveal>
+          <p className="contact-editorial__eyebrow">Have something in mind?</p>
+          <h2>Let’s make<br /><em>it happen.</em></h2>
         </Reveal>
-
-        <div className="relative border-t border-maroon-deep/20 py-10 md:py-14 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+        <Reveal className="contact-editorial__details" delay={100}>
+          <p>A new website, a useful tool, or an idea you’re ready to explore. Tell me what you have in mind, and let’s see what we can build together.</p>
           <div>
-            <p className="text-sm font-semibold text-maroon-deep/70 mb-2">Let's build something</p>
-            <h3 className="font-display font-bold uppercase text-3xl sm:text-4xl md:text-5xl text-maroon-deep leading-[1.05]">
-              Worth Shipping
-            </h3>
+            <a className="contact-editorial__cta" href={enquiry}>Tell me about your project <span aria-hidden="true">↗</span></a>
+            <a className="contact-editorial__email" href={`mailto:${profile.email}`}>{profile.email}</a>
+            <span className="contact-editorial__hint">Opens your email app. A rough idea is a good start.</span>
           </div>
-
-          <div className="flex flex-col items-start md:items-end gap-3">
-            <span className="text-xs font-semibold uppercase tracking-widest text-maroon-deep/60">
-              Reach out
-            </span>
-            <div className="flex items-center gap-3">
-              <a
-                href={`mailto:${profile.email}`}
-                aria-label="Email"
-                className="w-11 h-11 rounded-full border border-maroon-deep/30 flex items-center justify-center hover:bg-maroon-deep hover:text-cream text-maroon-deep transition-colors"
-              >
-                @
-              </a>
-              <a
-                href={profile.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="LinkedIn"
-                className="w-11 h-11 rounded-full border border-maroon-deep/30 flex items-center justify-center hover:bg-maroon-deep hover:text-cream text-maroon-deep transition-colors font-semibold text-sm"
-              >
-                in
-              </a>
-            </div>
-            <span className="text-sm text-maroon-deep/70">{profile.phone}</span>
-          </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row justify-between gap-2 text-xs text-maroon-deep/50 border-t border-maroon-deep/20 py-6">
-          <span>© {new Date().getFullYear()} {profile.fullName}</span>
-          <span>Built with Vite + React + Tailwind</span>
+        </Reveal>
+        <div className="contact-editorial__footer">
+          <span>© {new Date().getFullYear()} {profile.name}</span>
+          <span>{profile.location}</span>
+          <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a>
         </div>
       </div>
     </footer>

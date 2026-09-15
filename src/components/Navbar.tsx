@@ -4,6 +4,7 @@ import { shouldPlayIntro, INTRO_DURATION } from "../intro";
 const links = [
   { href: "#work", label: "Work" },
   { href: "#journal", label: "Journal" },
+  { href: "#contact", label: "Let’s talk" },
 ];
 
 export default function Navbar() {
@@ -23,7 +24,7 @@ export default function Navbar() {
       }`}
     >
       <nav className="max-w-[1400px] mx-auto px-4 md:px-6 h-11 flex items-center justify-end">
-        <ul className="flex items-center gap-5 md:gap-7">
+        <ul className="flex items-center gap-5 md:gap-7 rounded-full bg-cream/95 px-4 py-1.5">
           {links.map((l) => (
             <li key={l.href}>
               <a

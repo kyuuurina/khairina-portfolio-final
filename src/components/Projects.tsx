@@ -3,79 +3,36 @@ import Reveal from "./Reveal";
 
 export default function Projects() {
   return (
-    <section id="work" className="dot-grid relative py-20 md:py-28">
-      <div className="framed max-w-[1400px] mx-auto px-6 md:px-10">
-        <Reveal className="text-center mb-14">
-          <p className="text-sm font-semibold uppercase tracking-widest text-maroon mb-3">
-            Curated Projects
-          </p>
-          <h2 className="font-display font-bold uppercase text-3xl sm:text-4xl md:text-5xl text-maroon-deep">
-            Selected Work
-          </h2>
+    <section id="work" className="projects-editorial">
+      <div className="projects-editorial__inner">
+        <Reveal className="projects-editorial__heading">
+          <p className="projects-editorial__eyebrow">A selection of things I've made</p>
+          <h2>Selected <span>Work.</span></h2>
+          <p className="projects-editorial__note">Built with curiosity. Made for people.</p>
         </Reveal>
-
-        <div className="grid md:grid-cols-2 border-t border-l border-maroon-deep/15">
-          {projects.map((p, idx) => {
-            const Card = (
-              <div className="group h-full border-r border-b border-maroon-deep/15 p-2">
-                {/* Laptop (16:9) frame — object-contain so website screenshots never get cropped */}
-                <div className="relative aspect-video rounded-2xl overflow-hidden bg-blue-light/30 reveal-img">
-                  {p.image ? (
-                    <img
-                      src={p.image}
-                      alt={p.title}
-                      className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <span className="font-display font-bold text-6xl text-maroon-deep/20">
-                        {p.fallbackLabel}
-                      </span>
-                    </div>
-                  )}
-                  <span className="absolute top-3 right-3 text-[11px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full bg-maroon-deep text-cream">
-                    {p.year}
-                  </span>
+        <div className="projects-editorial__collection">
+          {projects.map((project, index) => (
+            <div key={project.title} className={`project-feature project-feature--${index % 2 ? "right" : "left"}`}>
+              <article>
+                <Reveal className="project-feature__meta">
+                  <span>{String(index + 1).padStart(2, "0")} / {project.tags.join(" · ")}</span>
+                  <span>{project.year}</span>
+                </Reveal>
+                <Reveal className="project-image-entrance">
+                <a className="project-feature__image" href={project.link} target="_blank" rel="noreferrer" aria-label={`View ${project.title}`}>
+                  {project.image ? <img src={project.image} alt={`${project.title} website`} loading="lazy" /> : <span>{project.fallbackLabel}</span>}
+                </a>
+                </Reveal>
+                <div className="project-feature__caption">
+                  <Reveal><h3>{project.title}</h3></Reveal>
+                  <Reveal delay={120}>
+                    <p>{project.description}</p>
+                    {project.link && <a className="project-feature__link" href={project.link} target="_blank" rel="noreferrer">{project.linkLabel} <span aria-hidden="true">↗</span></a>}
+                  </Reveal>
                 </div>
-
-                <div className="px-3 pt-5 pb-6">
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {p.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="text-[11px] font-semibold uppercase tracking-wide text-maroon"
-                      >
-                        {t}
-                        {p.tags.indexOf(t) < p.tags.length - 1 ? " ·" : ""}
-                      </span>
-                    ))}
-                  </div>
-                  <h3 className="font-display font-bold text-xl md:text-2xl text-maroon-deep mb-2">
-                    {p.title}
-                  </h3>
-                  <p className="text-sm text-maroon-deep/70 leading-relaxed mb-4">
-                    {p.description}
-                  </p>
-                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-maroon group-hover:gap-2.5 transition-all">
-                    {p.linkLabel}
-                    {p.link && <span aria-hidden>→</span>}
-                  </span>
-                </div>
-              </div>
-            );
-
-            return (
-              <Reveal key={p.title} delay={(idx % 2) * 120}>
-                {p.link ? (
-                  <a href={p.link} target="_blank" rel="noreferrer">
-                    {Card}
-                  </a>
-                ) : (
-                  Card
-                )}
-              </Reveal>
-            );
-          })}
+              </article>
+            </div>
+          ))}
         </div>
       </div>
     </section>

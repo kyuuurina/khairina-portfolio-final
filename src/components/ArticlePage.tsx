@@ -60,7 +60,7 @@ export default function ArticlePage({ slug }: { slug: string }) {
           {article.title}
         </h1>
 
-        <div className="relative aspect-[16/9] rounded-2xl overflow-hidden bg-blue-light/40 mb-10">
+        <div className="relative aspect-[16/9] overflow-hidden bg-blue-light/40 mb-10">
           {heroImage ? (
             <img
               src={heroImage}
@@ -87,7 +87,7 @@ export default function ArticlePage({ slug }: { slug: string }) {
         {extraImages.map((src, i) => (
           <div
             key={src}
-            className="relative aspect-[16/9] rounded-2xl overflow-hidden bg-blue-light/40 mt-10"
+            className="relative aspect-[16/9] overflow-hidden bg-blue-light/40 mt-10"
           >
             <img
               src={src}

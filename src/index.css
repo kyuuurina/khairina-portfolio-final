@@ -13,15 +13,6 @@
 
 html {
   scroll-behavior: smooth;
-  /* Snap firmly to each section. */
-  scroll-snap-type: y mandatory;
-}
-
-/* Each top-level section is a snap point. min-height lets tall sections still
-   scroll normally inside before snapping to the next. */
-main > section,
-#contact {
-  scroll-snap-align: start;
 }
 
 body {
@@ -156,6 +147,82 @@ body {
   }
 }
 
+/* Scroll-driven paper tear. --peel-sheet = the tearing sheet; --peel-under = revealed color. */
+.paper-peel {
+  --peel-sheet: var(--color-cream);
+  --peel-under: #ded6cc;
+  position: relative;
+  background: var(--peel-under);
+  height: clamp(280px, 52svh, 540px);
+}
+/* Reverse direction for the paper transition into Journal. */
+.paper-peel--reverse {
+  --peel-sheet: #ded6cc;
+  --peel-under: var(--color-cream);
+}
+/* Mirror the second tear so it peels from the opposite side. */
+.paper-peel--reverse .paper-peel__stage {
+  transform: scaleX(-1);
+}
+.paper-peel__stage {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--peel-under);
+}
+.paper-peel__underlay {
+  position: absolute;
+  inset: 0;
+  background: var(--peel-under);
+}
+/* Content scrolls alongside the decorative divider, outside its clipped area. */
+.paper-intro {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 40px 24px 64px;
+  text-align: center;
+  color: var(--color-cream);
+  background: var(--color-maroon-deep);
+}
+.paper-peel__eyebrow {
+  font-size: clamp(10px, 1vw, 13px);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+.paper-peel__title {
+  font-size: clamp(64px, 11vw, 180px);
+  font-weight: 700;
+  line-height: 0.93;
+  letter-spacing: -0.06em;
+}
+.paper-peel__title i { color: var(--color-blue-light); }
+.paper-peel__arrow { font-size: 36px; }
+.paper-peel__sheet {
+  position: absolute;
+  inset: 0;
+  background: var(--peel-sheet);
+  will-change: clip-path;
+}
+.paper-peel__fold {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 var(--paper-lift, 0px) 12px #18030455);
+}
+#work, #journal { scroll-margin-top: 44px; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .paper-peel { display: none; }
+  .paper-peel__stage { position: relative; }
+  .paper-peel__underlay, .paper-peel__fold { display: none; }
+  .paper-peel__sheet { will-change: auto; }
+}
+
 /* Now-playing equalizer bars */
 .eq {
   display: inline-flex;
@@ -234,10 +301,10 @@ body {
     transform: none;
   }
 
-  /* Image reveal: gentle scale + clip wipe */
+  /* Image reveal: gentle scale + clip wipe (filter included for grayscale→color hover) */
   .reveal-img img {
     transform: scale(1.08);
-    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease;
   }
   .reveal-in.reveal-img img,
   .reveal-in .reveal-img img {
@@ -301,4 +368,84 @@ body {
     4% 92%,
     0% 100%
   );
+}
+
+/* Editorial work pages share the hero's type, paper, and quiet dot grid. */
+.projects-editorial {
+  position: relative;
+  background-color: #ded6cc;
+  padding: 36px 6vw 100px;
+}
+.projects-editorial__inner { max-width: 1400px; margin: auto; }
+.projects-editorial__heading { color: var(--color-maroon-deep); margin-bottom: 88px; }
+.projects-editorial__eyebrow,
+.project-feature__meta {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.projects-editorial__heading h2 {
+  margin: 22px 0 18px;
+  font-size: clamp(58px, 9.6vw, 150px);
+  font-weight: 700;
+  line-height: 0.97;
+  letter-spacing: -0.065em;
+}
+.projects-editorial__heading h2 span { font-style: italic; }
+.projects-editorial__note { font-size: 14px; color: #49413c; }
+.projects-editorial__collection { display: flex; flex-direction: column; gap: 110px; }
+.project-feature { width: 84%; color: var(--color-maroon-deep); }
+.project-feature--right { align-self: flex-end; }
+.project-feature__meta { display: flex; justify-content: space-between; gap: 20px; margin-bottom: 16px; color: #550f1599; }
+.project-feature__image { display: block; overflow: hidden; background: #e9e2d9; border: 1px solid #550f151a; }
+.project-feature__image img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; filter: grayscale(1); transition: transform 600ms ease, filter 450ms ease; }
+.project-feature__image:hover img,
+.project-feature__image:focus-visible img { transform: scale(1.025); filter: grayscale(0); }
+.project-feature__caption { display: grid; grid-template-columns: 1fr 1.25fr; gap: 32px; padding-top: 24px; }
+.project-feature__caption h3 { font-size: clamp(26px, 3vw, 44px); font-weight: 700; letter-spacing: -0.045em; line-height: 1.1; }
+.project-feature__caption p { font-size: 14px; line-height: 1.8; color: #49413c; max-width: 540px; }
+.project-feature__link { display: inline-flex; gap: 20px; align-items: center; margin-top: 20px; padding-bottom: 5px; border-bottom: 1px solid #550f1540; font-size: 13px; font-weight: 600; }
+.project-feature a:focus-visible { outline: 2px solid var(--color-maroon); outline-offset: 6px; }
+@media (max-width: 640px) {
+  .projects-editorial { padding: 28px 24px 64px; }
+  .projects-editorial__heading { margin-bottom: 48px; }
+  .project-feature { width: 100%; }
+  .projects-editorial__collection { gap: 64px; }
+  .project-feature__caption { grid-template-columns: 1fr; gap: 14px; padding-top: 20px; }
+  .project-feature__meta { font-size: 9px; letter-spacing: 0.07em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-feature__image img { transition: none; }
+  .project-feature__image:hover img,
+  .project-feature__image:focus-visible img { transform: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .project-image-entrance.reveal {
+    transform: translateY(36px) scale(0.985);
+    transition: opacity 850ms ease, transform 850ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .project-image-entrance.reveal-in { transform: none; }
+  .projects-editorial .reveal:focus-within { opacity: 1; transform: none; }
+}
+
+.contact-editorial { background: var(--color-maroon-deep); color: var(--color-cream); padding: 90px 6vw 0; scroll-margin-top: 44px; }
+.contact-editorial__inner { max-width: 1400px; margin: auto; }
+.contact-editorial__eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 28px; }
+.contact-editorial h2 { font-size: clamp(64px, 10vw, 152px); line-height: .95; letter-spacing: -.06em; font-weight: 700; }
+.contact-editorial h2 em { color: #ded6cc; }
+.contact-editorial__details { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin: 52px 0 80px; align-items: start; }
+.contact-editorial__details p { max-width: 470px; font-size: 16px; line-height: 1.8; color: #f3eee8bf; }
+.contact-editorial__cta { display: flex; justify-content: space-between; gap: 20px; padding: 20px 24px; background: var(--color-cream); color: var(--color-maroon-deep); font-weight: 600; font-size: 15px; transition: background 200ms; }
+.contact-editorial__cta:hover { background: #ded6cc; }
+.contact-editorial__email { display: block; width: fit-content; margin-top: 24px; font-size: 16px; text-underline-offset: 5px; }
+.contact-editorial__email:hover { text-decoration: underline; }
+.contact-editorial__hint { display: block; margin-top: 10px; font-size: 12px; color: #f3eee899; }
+.contact-editorial__footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; border-top: 1px solid #f3eee830; padding: 26px 0; font-size: 11px; color: #f3eee8b3; }
+.contact-editorial a:focus-visible { outline: 2px solid #f3eee8; outline-offset: 6px; }
+@media (max-width: 640px) {
+  .contact-editorial { padding: 64px 24px 0; }
+  .contact-editorial__details { grid-template-columns: 1fr; gap: 28px; margin: 32px 0 48px; }
+  .contact-editorial__cta { padding: 18px; font-size: 14px; }
 }

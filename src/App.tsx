@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
+import PaperRip from "./components/PaperRip";
 import Projects from "./components/Projects";
 // import Experience from "./components/Experience";
 import Journal from "./components/Journal";
-// import Contact from "./components/Contact";
+import Contact from "./components/Contact";
 import ArticlePage from "./components/ArticlePage";
 import { usePath } from "./router";
 
@@ -21,11 +22,13 @@ function Home() {
       <Navbar />
       <main>
         <Hero />
+        <PaperRip />
         <Projects />
         {/* <Experience /> */}
+        <PaperRip reverse />
         <Journal />
       </main>
-      {/* <Contact /> */}
+      <Contact />
     </div>
   );
 }
