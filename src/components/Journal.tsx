@@ -36,7 +36,7 @@ export default function Journal() {
                 </div>
 
                 <div className="pt-5 flex flex-col flex-grow">
-                  <div className="flex items-center gap-2 mb-3 text-[11px] font-semibold uppercase tracking-wide text-maroon">
+                  <div className="flex flex-wrap items-center gap-2 mb-3 text-[11px] font-semibold uppercase tracking-wide text-maroon">
                     <span>{a.category}</span>
                     <span className="text-maroon-deep/30" aria-hidden>
                       ·

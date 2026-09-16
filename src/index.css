@@ -449,3 +449,53 @@ body {
   .contact-editorial__details { grid-template-columns: 1fr; gap: 28px; margin: 32px 0 48px; }
   .contact-editorial__cta { padding: 18px; font-size: 14px; }
 }
+
+/* Mobile: give the portrait, copy, and controls their own space in the flow. */
+@media (max-width: 640px) {
+  .site-nav { height: 64px; justify-content: center; padding-inline: 16px; }
+  .site-nav ul { gap: 8px; padding: 0 10px; box-shadow: 0 1px 0 #20202012; }
+  .site-nav a { display: flex; align-items: center; min-height: 44px; padding-inline: 12px; }
+  .hero { --photo-w: clamp(160px, 52vw, 280px); --photo-h: clamp(110px, 34vw, 185px); }
+  .hero:not([data-phase="full"]) { min-height: 100svh; padding: 100px 20px 24px; display: flex; flex-direction: column; justify-content: space-between; }
+  .hero:not([data-phase="full"]) .hero-wordmark { position: relative; top: auto; left: auto; transform: none; width: 100%; }
+  .hero-name { font-size: clamp(48px, 17vw, 100px); }
+  .hero-photo { margin-block: 8px; }
+  .hero-role { position: static; margin-top: 16px; font-size: 10px; letter-spacing: .16em; }
+  .hero-controls { position: relative; inset: auto; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 20px 12px; padding: 0 0 env(safe-area-inset-bottom); margin-top: 40px; }
+  .hero-controls > button { min-height: 44px; min-width: 0; }
+  .hero-controls > button:first-of-type { grid-column: 1; grid-row: 1; }
+  .hero-controls > button:last-of-type { grid-column: 2; grid-row: 1; align-self: center; font-size: 11px; }
+  .hero-controls > button:first-of-type > span:last-child { min-width: 0; }
+  .hero-controls > button:first-of-type .text-sm { font-size: 12px; }
+  .hero-controls > p { grid-column: 1 / -1; grid-row: 2; max-width: none; text-align: left; font-size: 14px; line-height: 1.7; border-top: 1px solid #20202020; padding-top: 20px; }
+  .hero[data-phase="full"] .hero-controls { visibility: hidden; }
+  .paper-peel { height: clamp(180px, 30svh, 260px); }
+  .projects-editorial { padding-inline: 20px; }
+  .projects-editorial__heading h2 { font-size: clamp(44px, 12vw, 76px); margin-block: 18px 16px; }
+  .project-feature__meta { align-items: baseline; gap: 12px; line-height: 1.6; }
+  .project-feature__meta > span:last-child { flex-shrink: 0; }
+  .project-feature__caption p { line-height: 1.7; }
+  .project-feature__link { min-height: 44px; margin-top: 12px; }
+  #journal { padding-block: 56px; }
+  #journal .framed { padding-inline: 20px; }
+  #journal h2 { font-size: clamp(28px, 8vw, 40px); line-height: 1.1; }
+  #journal .text-center.mb-14 { margin-bottom: 32px; text-align: left; }
+  .contact-editorial { padding: 56px 20px 0; }
+  .contact-editorial h2 { font-size: clamp(46px, 13vw, 78px); }
+  .contact-editorial__details { gap: 24px; }
+  .contact-editorial__details > * { min-width: 0; }
+  .contact-editorial__details p { font-size: 14px; line-height: 1.7; }
+  .contact-editorial__email { overflow-wrap: anywhere; font-size: 14px; min-height: 44px; display: flex; align-items: center; margin-top: 12px; }
+  .contact-editorial__footer { flex-direction: column; gap: 10px; padding-bottom: max(24px, env(safe-area-inset-bottom)); }
+  .contact-editorial__footer a { min-height: 44px; display: flex; align-items: center; }
+  #work, #journal, #contact { scroll-margin-top: 72px; }
+}
+
+/* Every photograph starts in monochrome, including the hero and journal. */
+img { filter: grayscale(1); transition: filter 450ms ease; }
+img:hover,
+a:hover img,
+a:focus-visible img { filter: grayscale(0); }
+@media (prefers-reduced-motion: reduce) {
+  img { transition: none; }
+}

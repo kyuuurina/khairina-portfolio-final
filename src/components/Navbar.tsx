@@ -23,7 +23,7 @@ export default function Navbar() {
         revealed ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
-      <nav className="max-w-[1400px] mx-auto px-4 md:px-6 h-11 flex items-center justify-end">
+      <nav className="site-nav max-w-[1400px] mx-auto px-4 md:px-6 h-11 flex items-center justify-end">
         <ul className="flex items-center gap-5 md:gap-7 rounded-full bg-cream/95 px-4 py-1.5">
           {links.map((l) => (
             <li key={l.href}>

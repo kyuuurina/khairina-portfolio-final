@@ -4,49 +4,35 @@ const AUDIO_SRC = "/audio/audio.mp3";
 const TRACK = "Sweet Boy";
 const ARTIST = "Malcolm Todd";
 
-// Play for this long, then slowly fade out.
-const PLAY_MS = 15000;
-const FADE_STEP_MS = 100;
-const FADE_STEP = 0.04; // ~2.5s fade to silence
+// Pause each playback after ten seconds.
+const PLAY_MS = 10000;
 
 export default function NowPlaying({ autostart = false }: { autostart?: boolean }) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
-  const startedRef = useRef(false);
-  const fadeTimeout = useRef<number | undefined>(undefined);
-  const fadeInterval = useRef<number | undefined>(undefined);
+  const [error, setError] = useState(false);
+  const pauseTimeout = useRef<number | undefined>(undefined);
 
-  const clearFade = () => {
-    if (fadeTimeout.current) window.clearTimeout(fadeTimeout.current);
-    if (fadeInterval.current) window.clearInterval(fadeInterval.current);
-    fadeTimeout.current = undefined;
-    fadeInterval.current = undefined;
+  const clearPauseTimer = () => {
+    if (pauseTimeout.current !== undefined) window.clearTimeout(pauseTimeout.current);
+    pauseTimeout.current = undefined;
   };
 
-  // After PLAY_MS, ramp the volume down to silence, then stop.
-  const scheduleFade = (a: HTMLAudioElement) => {
-    clearFade();
-    fadeTimeout.current = window.setTimeout(() => {
-      fadeInterval.current = window.setInterval(() => {
-        const next = a.volume - FADE_STEP;
-        if (next <= 0) {
-          a.pause();
-          a.volume = 1;
-          setPlaying(false);
-          clearFade();
-        } else {
-          a.volume = next;
-        }
-      }, FADE_STEP_MS);
+  const schedulePause = (a: HTMLAudioElement) => {
+    clearPauseTimer();
+    pauseTimeout.current = window.setTimeout(() => {
+      a.pause();
+      setPlaying(false);
+      clearPauseTimer();
     }, PLAY_MS);
   };
 
   const start = (a: HTMLAudioElement) => {
-    clearFade();
+    clearPauseTimer();
     a.volume = 1;
     return a.play().then(() => {
       setPlaying(true);
-      scheduleFade(a);
+      schedulePause(a);
     });
   };
 
@@ -54,44 +40,69 @@ export default function NowPlaying({ autostart = false }: { autostart?: boolean 
     a.pause();
     a.volume = 1;
     setPlaying(false);
-    clearFade();
+    clearPauseTimer();
   };
 
   const toggle = () => {
     const a = audioRef.current;
     if (!a) return;
-    if (playing) stop(a);
-    else start(a).catch(() => setPlaying(false));
+    setError(false);
+    if (!a.paused) stop(a);
+    else start(a).catch(() => {
+      setPlaying(false);
+      setError(true);
+    });
   };
 
-  // When the intro finishes, start playing. Browsers block gesture-less autoplay,
-  // so if it's rejected we start on the viewer's first interaction instead.
+  // A scroll does not unlock audio. Keep listening for a real gesture until
+  // playback succeeds, and let the music buttons handle their own clicks.
   useEffect(() => {
-    if (!autostart || startedRef.current) return;
-    startedRef.current = true;
+    if (!autostart) return;
     const a = audioRef.current;
     if (!a) return;
-
+    let disposed = false;
+    const events = ["pointerdown", "keydown"] as const;
+    const removeListeners = () => {
+      events.forEach((event) => window.removeEventListener(event, kick));
+    };
+    const kick = (event: Event) => {
+      if (event.target instanceof Element && event.target.closest("button, a, input, textarea, select")) return;
+      if (!a.paused) {
+        removeListeners();
+        return;
+      }
+      start(a).then(removeListeners).catch(() => {
+        // A rejected attempt must not consume the next valid gesture.
+      });
+    };
     start(a).catch(() => {
-      const events = ["pointerdown", "keydown", "touchstart", "scroll"] as const;
-      const kick = () => {
-        start(a).catch(() => {});
-        events.forEach((e) => window.removeEventListener(e, kick));
-      };
-      events.forEach((e) => window.addEventListener(e, kick, { passive: true }));
+      if (!disposed) {
+        events.forEach((event) => window.addEventListener(event, kick, { passive: true }));
+      }
     });
+    a.addEventListener("playing", removeListeners);
+    return () => {
+      disposed = true;
+      removeListeners();
+      a.removeEventListener("playing", removeListeners);
+      clearPauseTimer();
+      a.pause();
+    };
   }, [autostart]);
 
   // Clean up timers on unmount.
-  useEffect(() => clearFade, []);
+  useEffect(() => clearPauseTimer, []);
 
   return (
-    <div className="hero-ui absolute inset-x-0 bottom-0 z-10 px-5 md:px-10 pb-5 md:pb-6 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between text-maroon-deep">
+    <div className="hero-controls hero-ui absolute inset-x-0 bottom-0 z-10 px-5 md:px-10 pb-5 md:pb-6 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between text-maroon-deep">
       <audio
         ref={audioRef}
         src={AUDIO_SRC}
         loop
         preload="none"
+        onPlaying={() => { setPlaying(true); setError(false); }}
+        onPause={() => { setPlaying(false); clearPauseTimer(); }}
+        onError={() => { setPlaying(false); setError(true); clearPauseTimer(); }}
         onEnded={() => setPlaying(false)}
       />
 
@@ -109,7 +120,7 @@ export default function NowPlaying({ autostart = false }: { autostart?: boolean 
         </span>
         <span>
           <span className="block text-[10px] uppercase tracking-widest text-maroon-deep/45">
-            Now playing
+            {error ? "Audio unavailable — tap to retry" : playing ? "Now playing" : "Play music"}
           </span>
           <span className="block text-sm font-semibold">
             {TRACK} <span className="text-maroon-deep/50">— {ARTIST}</span>
