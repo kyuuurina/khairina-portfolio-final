@@ -1,5 +1,5 @@
 export const profile = {
-  name: "Khairina Atiqah",
+  name: "khairina hizar",
   fullName: "Khairina Atiqah Binti Khairil Hizar",
   role: "Software Engineer",
   location: "Based in Cyberjaya, Malaysia",
